@@ -1,11 +1,11 @@
 Task 1 : Hospital
 
  CLASS Hospital 
-   ATTRIBUTES
-    ID : NUMBER
-    NAME : TEXT
-    ADDRESS : TEXT
-    PATIENT : LIST[PATIENT]
+  ATTRIBUTES
+   ID : NUMBER
+   NAME : TEXT
+   ADDRESS : TEXT
+   PATIENT : LIST<PATIENT>
   
  CONSTRUCTOR (I : TEXT, N : TEXT , A : TEXT)
     SET ID TO I
@@ -35,7 +35,7 @@ Task 1 : Hospital
     ADMISSIONDATE : STRING
     ISADMITTED :BOOLEN
     ROOM : NUMBER
-    PROCEDURES: LIST[PROCEDURES]
+    PROCEDURES: LIST<PROCEDURES>
   
     CONSTRUCTOR(I :NUMBER, N: TEXT, DOB:TEXT, R:NUMBER)
       SET ID TO I
@@ -58,11 +58,66 @@ Task 1 : Hospital
   END CLASS
 
 
+  CLASS Procedure  
+   ATTRIBUTS
+    ID : NUMBER
+    NAME :  STRING
+    performedDate : STRING
+    doctorName : STRING
+    notes  :STRING
+    cost  : NUMBER
+  
+    CONSTRUCTOR(I :NUMBER, N: TEXT, PRB:TEXT, D:TEXT,NO:TEXT,CO:NUMBER )
+      SET ID TO I
+      SET NAME TO N
+      SET performedDate TO PRB
+      SET doctorName TO D
+      SET notes TO NO
+      SET cost TO CO
+    END CONSTRUCTER
+   
+   METHODS
+     DESCRIBE()
+     DISPLAY  "NAME" + NAME + "-" "DOCTOR NAME" + doctorName + "DATE" + performedDate     
+   END METHOD      
+  END CLASS
+
+   CLASS ROOM 
+   ATTRIBUTS
+    ID : NUMBER
+    ROOMNUMBER :  NUMBER
+    WARDTYPE : STRING
+    FLOOR : NUMBER
+    COUNT  :NUMBER
+  
+    CONSTRUCTOR(I :NUMBER, RNUM: NUMBER, WT:TEXT, F:TEXT,CO:NUMBER )
+      SET ID TO I
+      SET ROOMNUMBER TO RNUM
+      SET WARDTYPE TO WT
+      SET FLOOR TO F
+      SET COUNT TO CO
+    END CONSTRUCTER
+           
+  END CLASS
+
  START
  BEGIN
 
    CREATE OBJECT MYHospital OF Hospital ("441","STAR HOSPITAL","SOAHR")
+ 
+   CREATE OBJECT PATIENT1 OF PATIENT("52","INTISAR","26/2/1996","1/7/2026","TRUE",2)
+   
+   CREATE OBJECT Procedure1 OF  Procedure("65","X-Ray (chest)","1/7/2026","AHMED","No fractures found",25)
+     
+   CREATE OBJECT ROOM1 OF  ROOM("6",305,"General",3,2)
 
-
+   
+     MYHospital.ADMITPATIENT(PATIENT1)
+     MYHospital.DUSCHARGEPATIENT(52)
+     MYHospital.COUNTPATIENT()
+     Procedure1.DESCRIBE()
+     PATIENT1.ADDPROCEDURE(Procedure1)
+     PATIENT1.MOVEROOM(6)
+    
 END 
  STOP
