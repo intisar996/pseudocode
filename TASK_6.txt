@@ -673,9 +673,153 @@ BEGIN
   DISPLAY GAS1.CALCULATEAMOUNTOWED()
 
 END
-```
-
 STOP
 
+-------------------------------------------------------------------------------------
+Task 307: Ride-Sharing Vehicle Tiers
+CLASS Ride
 
+ATTRIBUTES
+     ID : NUMBER
+     PickupLocation : TEXT
+     DropoffLocation : TEXT
+     Distance : NUMBER
+     Route : ROUTE
+
+CONSTRUCTOR(PU:TEXT,DR:TEXT,DIS:NUMBER,R:ROUTE)
+    SET PickupLocation TO PU
+    SET DropoffLocation TO DR
+    SET Distance TO DIS
+    SET Route TO R
+END CONSTRUCTOR
+
+METHOD CalculateFare()
+END METHOD
+
+METHOD GetDetails()
+    DISPLAY PickupLocation
+    DISPLAY DropoffLocation
+    DISPLAY Distance
+END METHOD
+
+END CLASS
+
+
+CLASS StandardRide INHERITS Ride
+
+ATTRIBUTES
+     BaseRate : NUMBER
+
+CONSTRUCTOR(PU:TEXT,DR:TEXT,DIS:NUMBER,R:ROUTE,BR:NUMBER)
+    SUPER(PU,DR,DIS,R)
+    SET BaseRate TO BR
+END CONSTRUCTOR
+
+METHOD CalculateFare()
+    DISPLAY Distance * BaseRate
+END METHOD
+
+END CLASS
+
+
+CLASS PremiumRide INHERITS Ride
+
+ATTRIBUTES
+     PremiumRate : NUMBER
+    ComfortSurcharge : NUMBER
+
+CONSTRUCTOR(PU:TEXT,DR:TEXT,DIS:NUMBER,R:ROUTE,PR:NUMBER,CS:NUMBER)
+    SUPER(PU,DR,DIS,R)
+    SET PremiumRate TO PR
+    SET ComfortSurcharge TO CS
+END CONSTRUCTOR
+
+METHOD CalculateFare()
+    DISPLAY (Distance * PremiumRate) + ComfortSurcharge
+END METHOD
+
+END CLASS
+
+
+CLASS SharedRide INHERITS StandardRide
+
+ATTRIBUTES
+     PassengerCount : NUMBER
+
+CONSTRUCTOR(PU:TEXT,DR:TEXT,DIS:NUMBER,R:ROUTE,BR:NUMBER,PC:NUMBER)
+    SUPER(PU,DR,DIS,R,BR)
+    SET PassengerCount TO PC
+END CONSTRUCTOR
+
+METHOD CalculateFare()
+    DISPLAY (Distance * BaseRate) / PassengerCount
+END METHOD
+
+END CLASS
+
+
+CLASS Route
+
+ATTRIBUTES
+     ID : NUMBER
+     Waypoints : LIST<WAYPOINT>
+
+CONSTRUCTOR()
+    SET Waypoints TO EMPTY LIST
+END CONSTRUCTOR
+
+METHOD AddWaypoint(W:WAYPOINT)
+    ADD W TO Waypoints
+END METHOD
+
+METHOD DisplayRoute()
+    DISPLAY Waypoints
+END METHOD
+
+END CLASS
+
+
+CLASS Waypoint
+
+ATTRIBUTES
+     ID : NUMBER
+     Location : TEXT
+     OrderNumber : NUMBER
+
+CONSTRUCTOR(L:TEXT,O:NUMBER)
+    SET Location TO L
+    SET OrderNumber TO O
+END CONSTRUCTOR
+
+METHOD GetLocation()
+    DISPLAY Location
+END METHOD
+
+END CLASS
+
+START
+   BEGIN
+
+    CREATE OBJECT R1 OF ROUTE()
+
+    CREATE OBJECT WP1 OF WAYPOINT("City Center",1)
+
+    R1.ADDWAYPOINT(WP1)
+
+    CREATE OBJECT SR1 OF STANDARDRIDE("City Center","Airport",20,R1,0.5)
+
+    CREATE OBJECT PR1 OF PREMIUMRIDE("City Center","Airport",20,R1,0.8,3)
+
+    CREATE OBJECT SHR1 OF SHAREDRIDE("City Center","Airport",20,R1,0.5,4)
+
+    SR1.CALCULATEFARE()
+
+    PR1.CALCULATEFARE()
+
+    SHR1.CALCULATEFARE()
+
+    R1.DISPLAYROUTE()
+
+END
+STOP
 
